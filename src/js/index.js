@@ -6,7 +6,9 @@ const game = {
   rows: 4,
   cols: 10,
   score: 0,
+  level: 1,
   running: true,
+  gameStarted: false,
   sprites: {
     background: undefined,
     platform: undefined,
@@ -21,8 +23,8 @@ const game = {
   init: function() {
     const canvas = document.getElementById("arkanoid");
     this.ctx = canvas.getContext("2d");
-    this.ctx.font = "20px Arial";
-    this.ctx.fillStyle = "#aff";
+    this.ctx.font = "15px PressStart";
+    this.ctx.fillStyle = "#fff";
 
     window.addEventListener("keydown", e => {
       if (e.keyCode == 37) {
@@ -33,7 +35,7 @@ const game = {
       }
       if (e.keyCode == 32) {
         game.platform.releaseBall();
-        this.sound.menuMusic.volume = 0.2;
+        this.sound.menuMusic.volume = 0.1;
         this.sound.menuMusic.play();
       }
     });
@@ -83,7 +85,18 @@ const game = {
       }
     }, this);
 
+    if (!this.gameStarted) {
+      this.ctx.fillText("PRESS SPACE", 320, 400);
+    }
+
     this.ctx.fillText("SCORE: " + this.score, 15, this.height - 15);
+    this.ctx.fillText("LEVEL: " + this.level, 10, 25);
+
+    this.ctx.fillText(
+      `Ball:${game.ball.velocity}  Platform:${game.platform.velocity}`,
+      500,
+      25
+    );
   },
   update: function() {
     if (this.ball.collide(this.platform)) {
@@ -117,12 +130,34 @@ const game = {
       });
     }
   },
+  nextLevel: function() {
+    ++this.level;
+    game.platform.x = 350;
+    game.platform.y = 500;
+    game.ball.dx = 0;
+    game.ball.dy = 0;
+    game.ball.y = 478;
+    game.ball.x = 390;
+    this.running = true;
+    game.platform.ball = game.ball;
+    if (game.ball.velocity < 10) {
+      game.ball.velocity++;
+    }
+    if (game.ball.velocity > 8 && game.platform.velocity < 12) {
+      game.platform.velocity++;
+    }
+
+    game.blocks.forEach(item => {
+      item.isAlive = true;
+    });
+  },
   over: function(message) {
     this.running = false;
     this.sound.menuMusic.pause();
     this.sound.loseMusic.play();
-
-    console.log(message);
+    if (message === "next") {
+      this.nextLevel();
+    }
   }
 };
 
@@ -135,6 +170,7 @@ game.ball = {
   dy: 0,
   velocity: 4,
   jump: function() {
+    game.gameStarted = true;
     this.dy = -this.velocity;
     this.dx = -this.velocity;
   },
@@ -159,11 +195,11 @@ game.ball = {
   bumpBlock: function(block) {
     this.dy *= -1;
     block.isAlive = false;
+
     ++game.score;
     game.sound.blocksound.play();
-
     if (game.score >= game.blocks.length) {
-      game.over("You win!");
+      game.over("next");
     }
   },
   onTheLeftSide: function(platform) {
@@ -203,6 +239,14 @@ game.platform = {
   move: function() {
     this.x += this.dx;
 
+    if (this.x < -106) {
+      this.x = 700;
+    }
+
+    if (this.x > 800) {
+      this.x = -106;
+    }
+
     if (this.ball) {
       this.ball.x += this.dx;
     }
@@ -221,7 +265,6 @@ game.platform = {
     }
   }
 };
-
 window.addEventListener("load", () => {
   game.start();
 });
