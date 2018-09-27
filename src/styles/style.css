@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+}
+
+body {
+  background-color: #5e835e;
+}
+
+header {
+  display: flex;
+  margin: 30px auto;
+  height: 50px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+main canvas {
+  border-radius: 4px;
+}
+
+footer {
+  position: absolute;
+  right: 200px;
+  bottom: 50px;
+}
