@@ -7,6 +7,7 @@ const game = {
   cols: 10,
   score: 0,
   level: 1,
+  levelBlocks: undefined,
   running: true,
   gameStarted: false,
   sprites: {
@@ -63,6 +64,7 @@ const game = {
         });
       }
     }
+    this.levelBlocks = this.blocks.length;
   },
   start: function() {
     this.init();
@@ -139,6 +141,7 @@ const game = {
     game.ball.y = 478;
     game.ball.x = 390;
     this.running = true;
+    this.levelBlocks = this.levelBlocks * this.blocks.length;
     game.platform.ball = game.ball;
     if (game.ball.velocity < 10) {
       game.ball.velocity++;
@@ -156,6 +159,7 @@ const game = {
     this.sound.menuMusic.pause();
     this.sound.loseMusic.play();
     if (message === "next") {
+      console.log("bug");
       this.nextLevel();
     }
   }
@@ -198,7 +202,7 @@ game.ball = {
 
     ++game.score;
     game.sound.blocksound.play();
-    if (game.score >= game.blocks.length) {
+    if (game.score >= game.levelBlocks) {
       game.over("next");
     }
   },
