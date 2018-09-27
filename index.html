@@ -5,16 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="./src/styles/style.css">
+  <link rel="stylesheet" href="./src/styles/animation.css">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+
   <title>Arkanoid</title>
 </head>
 <body>
   <header>
-    Arkanoid Game
+    <h1>ARKANOID GAME</h1>
 
   </header>
   <main>
+    <audio src="./src/sounds/block.wav" id="block-sound"></audio>
+    <audio src="./src/sounds/menu.mp3" id="menu-music" type="audio/mp3"></audio>
+    <audio src="./src/sounds/lose.wav" id="lose" type="audio/wav"></audio>
+    
     <canvas id="arkanoid" width="800" height="600"></canvas>
-
   </main>
   <footer>
     &copy 2018 followhappyq

@@ -3,9 +3,16 @@
 }
 
 body {
-  background-color: #5e835e;
+  background-color: #222222;
+  background: repeating-linear-gradient(
+      45deg,
+      #2b2b2b 0%,
+      #2b2b2b 10%,
+      #222222 0%,
+      #222222 50%
+    )
+    0 / 15px 15px;
 }
-
 header {
   display: flex;
   margin: 30px auto;
@@ -13,18 +20,18 @@ header {
   flex-wrap: wrap;
   justify-content: center;
 }
-
 main {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
+
 main canvas {
   border-radius: 4px;
 }
-
 footer {
   position: absolute;
   right: 200px;
   bottom: 50px;
+  color: white;
 }

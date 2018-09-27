@@ -13,9 +13,16 @@ const game = {
     ball: undefined,
     blocks: undefined
   },
+  sound: {
+    blocksound: document.getElementById("block-sound"),
+    menuMusic: document.getElementById("menu-music"),
+    loseMusic: document.getElementById("lose")
+  },
   init: function() {
     const canvas = document.getElementById("arkanoid");
     this.ctx = canvas.getContext("2d");
+    this.ctx.font = "20px Arial";
+    this.ctx.fillStyle = "#aff";
 
     window.addEventListener("keydown", e => {
       if (e.keyCode == 37) {
@@ -26,6 +33,8 @@ const game = {
       }
       if (e.keyCode == 32) {
         game.platform.releaseBall();
+        this.sound.menuMusic.volume = 0.2;
+        this.sound.menuMusic.play();
       }
     });
     window.addEventListener("keyup", e => {
@@ -73,6 +82,8 @@ const game = {
         this.ctx.drawImage(this.sprites.blocks, item.x, item.y);
       }
     }, this);
+
+    this.ctx.fillText("SCORE: " + this.score, 15, this.height - 15);
   },
   update: function() {
     if (this.ball.collide(this.platform)) {
@@ -108,18 +119,21 @@ const game = {
   },
   over: function(message) {
     this.running = false;
+    this.sound.menuMusic.pause();
+    this.sound.loseMusic.play();
+
     console.log(message);
   }
 };
 
 game.ball = {
-  width: 20,
-  height: 20,
+  width: 22,
+  height: 22,
   x: 390,
   y: 478,
   dx: 0,
   dy: 0,
-  velocity: 3,
+  velocity: 4,
   jump: function() {
     this.dy = -this.velocity;
     this.dx = -this.velocity;
@@ -146,13 +160,14 @@ game.ball = {
     this.dy *= -1;
     block.isAlive = false;
     ++game.score;
+    game.sound.blocksound.play();
 
     if (game.score >= game.blocks.length) {
       game.over("You win!");
     }
   },
   onTheLeftSide: function(platform) {
-    return this.x + this.width / 2 < (platform.x + platform.width) / 2;
+    return this.x + this.width / 2 < platform.x + platform.width / 2;
   },
   bumpPlatform: function(platform) {
     this.dy = -this.velocity;
